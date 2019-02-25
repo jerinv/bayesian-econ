@@ -1,0 +1,167 @@
+---
+title: "Bayesian Econometrics: Homework 1"
+author: "Jerin Varghese"
+date: "February 1, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1
+
+Download and install R and R-Studio from https://cran.r-project.org and
+https://www.rstudio.com/products/rstudio/download/
+
+## Problem 2
+Use R to calculate the following:
+
+1. Create a vector called x containing the number 2 5 8 12 16
+```{r}
+x <- c(2,5,8,12,16)
+```
+
+2. Create a vector called y containing the number from 5 to 9
+```{r}
+y <- c(5:9)
+```
+
+3. Calculate z = x-y
+```{r}
+z <- x-y
+```
+```{r, echo=FALSE}
+z
+```
+
+## Problem 3
+1. Create a vector x of 100 values starting at 2 and increasing by 3 each time
+```{r}
+x <- seq(from=2,by=3,length.out=100)
+```
+
+2. Extract the values at positions 5,10,15 and 20 in the vector of values from x
+```{r}
+x[seq(5,20,5)]
+```
+
+
+3. Extract the values at positions 10 to 20.
+```{r}
+x[10:20]
+```
+
+4. Create 25 by 4 matrix x3 from x (first 4 elements go to the first row, next 4 elements
+go to 2nd row, etc.)
+```{r}
+x3 <- matrix(data=x, nrow=25, ncol=4)
+```
+
+5. Create 25 by 2 matrix from 2nd and 3rd column of matrix x3.
+```{r}
+matrix(data=x3[,2:3], nrow=25, ncol=2)
+```
+
+
+## Problem 4
+1. Save a tap delimited file, called sample file.txt in a directory and set your working
+directory to where your data is stored. Then read the file into a new structure using
+read.delim command and check (print) the row 11.
+```{r}
+working_dir <- "C:/Users/jerin/OneDrive/Documents/JHU/Bayesian Econometrics/Homeworks"
+setwd(working_dir)
+sample_file <- read.delim('sample_file.txt')
+sample_file[11,]
+```
+
+2. Calculate the mean of the column named Length.
+```{r}
+mean(sample_file$Length)
+```
+
+3. Find out how many rows in sample file have a Length which is < 65.
+```{r}
+nrow(sample_file[sample_file$Length > 65,])
+```
+
+4. Print the values of Length less than 65.
+```{r}
+sample_file[sample_file$Length > 65,"Length"]
+```
+
+
+## Problem 5.
+1. Generate a sequence of x variable from 0 to 10 by 0.5 increment.
+```{r}
+x <- seq(0, 10, 0.5)
+```
+
+2. Generate yi = 2 + 3*xi + ei where ei ~ i.i.d.N(0, 3^2).
+```{r}
+y <- 2 + 3*x + rnorm(length(x),mean=0,sd=3)
+```
+
+3. Plot x and y.
+```{r}
+plot(x,y)
+```
+
+4. Fit a linear regression model for y on x using command lm
+```{r}
+lm.fit <- lm(y~x)
+```
+
+5. Draw the fitted regression line.
+```{r}
+plot(x,y) + abline(lm.fit, col="red")
+```
+
+
+## Problem 6.
+1. Draw a sample of 100 observations from gamma distribution with shape parameter =1
+and rate parameter=4.
+```{r}
+set.seed(42)
+gsample <- rgamma(100, shape=1, rate=4)
+```
+
+2. calculate the mean and compare with the theoretical mean.
+```{r}
+# sample mean is .246, which is very close to theoretical mean of 1/4
+mean(gsample)
+```
+
+3. Draw histogram and density of the sample
+```{r}
+hist(gsample, prob=TRUE)
+```
+
+
+## Problem 7
+### Generate 1000 observations of an AR process and draw graphs:
+1. generate a standard normal random variable for the initial value x1.
+```{r}
+set.seed(42)
+n <- 1000
+white_noise <- rnorm(n)
+# initialize first value
+ar1 <- c(white_noise[1])
+```
+
+2. for xi from i=2 to 1000, xi = .09*x[i-1] + ei where ei ~ i.i.d.N(0, 1)
+```{r}
+for (i in 2:n){
+  ar1[i] <- .09*ar1[i-1] + white_noise[i]
+}
+```
+
+3. plot x and cumulative sum of x (use command cusum) over i
+```{r}
+plot(ar1, cumsum(ar1))
+```
+
+
+
